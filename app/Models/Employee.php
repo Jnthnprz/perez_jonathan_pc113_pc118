@@ -8,12 +8,12 @@ use Illuminate\Database\Factories\HasFactory;
 class Employee extends Model
 {
     use HasFactory;
-
+    protected $table = 'employee';
     protected $fillable = [
-        'l_name';
-        'f_name';
-        'm_name';
-        'age';
-        'contact_number';
-    ]
+        'l_name',
+        'f_name',
+        'm_name',
+        'age',
+        'contact_number',
+    ];
 }
