@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Factories\HasFactory;
 
 class Employee extends Model
 {
     use HasFactory;
-    protected $table = 'employee';
+
+    protected $table = 'employees'; // Dapat tama ang table name
     protected $fillable = [
         'l_name',
         'f_name',

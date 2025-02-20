@@ -6,13 +6,13 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Employee;
 
-class Employees extends Seeder
+class EmployeeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
-    public function run()
-    {
-        Employee::factory()->count(10)->create();
-    }
+            public function run(): void
+        {
+            Employee::factory(10)->create(); 
+        }
 }

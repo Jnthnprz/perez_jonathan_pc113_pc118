@@ -6,13 +6,13 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Student;
 
-class Students extends Seeder
+class StudentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
-    public function run()
-    {
-        Student::factory()->count(10)->create();
-    }
+            public function run(): void
+        {
+            Student::factory(10)->create(); 
+        }
 }
