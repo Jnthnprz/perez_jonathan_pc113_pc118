@@ -9,6 +9,7 @@ class StudentController extends Controller
 {
     public function index(Request $request)
     {
+        
         $query = Student::query();
 
         if ($request->has('search')) {
@@ -24,4 +25,54 @@ class StudentController extends Controller
 
         return response()->json($students);
     }
+        public function create(Request $request)
+    {
+        $validateData = $request->validate([
+            'f_name' => 'required',
+            'l_name' => 'required',
+            'm_name' => 'required',
+            'age' => 'required',
+            'contact_number' => 'required',
+        ]);
+        $student = Student::create($validateData);
+        return response()->json([
+        'message' => 'Student created successfully',
+        'student' => $student,
+    ], 201);
+}
+        public function update(Request $request, $id)
+    {
+        $student = Student::find($id);
+        if (is_null($student)) {
+            return response()->json([
+                'message' => 'Student not found',
+            ], 404);
+        }
+        $validateData = $request->validate([
+            'f_name' => 'required',
+            'l_name' => 'required',
+            'm_name' => 'required',
+            'age' => 'required',
+            'contact_number' => 'required',
+        ]);
+        $student->update($validateData);
+        return response()->json([
+            'message' => 'Student updated successfully',
+            'student' => $student,
+        ]);
+}
+
+        public function destroy($id)
+    {
+        $student = Student::find($id);
+        if (is_null($student)) {
+            return response()->json([
+                'message' => 'Student not found',
+            ], 404);
+        }
+        $student->delete();
+        return response()->json([
+            'message' => 'Student deleted successfully',
+        ]);
+}
 }
