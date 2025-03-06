@@ -34,4 +34,5 @@ class AuthController extends Controller
             'user' => $user->only(['id','name','email'])
         ]);
     } 
+
 }

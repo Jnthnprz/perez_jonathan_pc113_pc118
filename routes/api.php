@@ -5,7 +5,6 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\API\AuthController;
 
-
 Route::get('/employees', [EmployeeController::class, 'index']);
 Route::get('/students', [StudentController::class, 'index']);
 Route::post('/students', [StudentController::class, 'create']);
