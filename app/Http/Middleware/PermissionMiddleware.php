@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;    
 
 class PermissionMiddleware
 {
@@ -23,4 +24,5 @@ class PermissionMiddleware
                 return response()->json(['message' => 'Unauthorized'], 401);
             }
     }
+}
 }

@@ -15,4 +15,4 @@ Route::post('/employees', [EmployeeController::class, 'create']);
 Route::delete('/employees/{id}', [EmployeeController::class, 'destroy']);
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']); 

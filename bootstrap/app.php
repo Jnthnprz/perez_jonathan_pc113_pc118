@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\PermissionMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -11,7 +12,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->register('permission', \App\Http\Middleware\PermissionMiddleware::class);
+        // $middleware->register('permission', \App\Http\Middleware\PermissionMiddleware::class);
+       $middleware->append(PermissionMiddleware::class);
+       $middleware->append(\App\Http\Middleware\AllowedRolesMiddleware::class);
+
+       $middleware->alias([
+        'admin' => \App\Http\Middleware\AllowedRolesMiddleware::class,
+        'permission' => \App\Http\Middleware\PermissionMiddleware::class,
+       ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
