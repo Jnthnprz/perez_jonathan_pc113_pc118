@@ -49,11 +49,11 @@ class StudentController extends Controller
             ], 404);
         }
         $validateData = $request->validate([
-            'f_name' => 'required',
-            'l_name' => 'required',
-            'm_name' => 'required',
-            'age' => 'required',
-            'contact_number' => 'required',
+            'f_name' => 'string',
+            'l_name' => 'string',
+            'm_name' => 'string',
+            'age' => 'string',
+            'contact_number' => 'string',
         ]);
         $student->update($validateData);
         return response()->json([
@@ -75,4 +75,14 @@ class StudentController extends Controller
             'message' => 'Student deleted successfully',
         ]);
 }
+public function show($id)
+    {
+        $student = Student::find($id);
+        if (is_null($student)) {
+            return response()->json([
+                'message' => 'Student not found',
+            ], 404);
+        }
+        return response()->json($student);
+    }
 }
