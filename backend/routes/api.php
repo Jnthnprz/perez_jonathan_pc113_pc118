@@ -19,7 +19,7 @@ Route::post('/employees', [EmployeeController::class, 'create']);
     Route::put('/students/{id}', [StudentController::class, 'update']);
     Route::delete('/students/{id}', [StudentController::class, 'destroy']);
     Route::get('/students/{id}', [StudentController::class, 'show']);
-Route::get('/employees/{id}', [EmployeeController::class, 'show']);
+    
     
 
 
