@@ -63,7 +63,7 @@
     <div class="container">
         <div class="cont1">
             <div class="add">
-                <a href="add_employee.php" class="btn btn-success">Add Employee</a>
+                <a href="add_employee.php" class="btn btn-primary">Add Employee</a>
             </div>
         <h1>Employee Data Table</h1>
         <table id="employeeTable" class="table table-striped table-bordered">
@@ -99,49 +99,119 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     <script>
-        $(document).ready(function () {
+    $(document).ready(function () {
+        // Fetch employees data
+        $.ajax({
+            url: 'http://127.0.0.1:8000/api/employees', 
+            method: 'GET',
+            success: function (data) {
+                let tableBody = '';
+                data.forEach((employee) => {
+                    tableBody += `
+                        <tr>
+                            <td>${employee.id}</td>
+                            <td>${employee.l_name}</td>
+                            <td>${employee.f_name}</td>
+                            <td>${employee.m_name}</td>
+                            <td>${employee.age}</td>
+                            <td>${employee.contact_number}</td>
+                            <td>
+                                <button class="edit-btn btn btn-primary btn-sm" data-id="${employee.id}">Edit</button>
+                                <button class="delete-btn btn btn-danger btn-sm" data-id="${employee.id}">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                $('#employeeTable tbody').html(tableBody);
 
+                // Initialize DataTable
+                $('#employeeTable').DataTable({
+                    responsive: true,
+                    paging: true,
+                    searching: true,
+                    ordering: true,
+                    language: {
+                        search: "Search:",
+                        lengthMenu: "Show _MENU_ entries",
+                        info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                    }
+                });
+            },
+            error: function (error) {
+                console.error('Error fetching employees:', error);
+                alert('Failed to fetch employees. Please try again.');
+            }
+        });
+
+        // Edit button click event
+        $(document).on('click', '.edit-btn', function () {
+            const employeeId = $(this).data('id');
             $.ajax({
-                url: 'http://127.0.0.1:8000/api/employees', 
+                url: `http://127.0.0.1:8000/api/employees/${employeeId}`,
                 method: 'GET',
-                success: function (data) {
-                    let tableBody = '';
-                    data.forEach((employee) => {
-                        tableBody += `
-                            <tr>
-                                <td>${employee.id}</td>
-                                <td>${employee.l_name}</td>
-                                <td>${employee.f_name}</td>
-                                <td>${employee.m_name}</td>
-                                <td>${employee.age}</td>
-                                <td>${employee.contact_number}</td>
-                                <td>${employee.action}</td>
-                                <>td>
-                                    <a href="edit_employee.php?id=${employee.id}" class="btn btn-primary">Edit</a>
-                                    <a href="delete_employee.php?id=${employee.id}" class="btn btn-danger">Delete</a>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                    $('#employeeTable tbody').html(tableBody);
-                    $('#employeeTable').DataTable({
-                        responsive: true,
-                        paging: true,
-                        searching: true,
-                        ordering: true,
-                        
-                        language: {
-                            search: "Search:",
-                            lengthMenu: "Show _MENU_ entries",
-                            info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                        }
-                    });
+                success: function (employee) {
+                    $('#editEmployeeId').val(employee.id);
+                    $('#editLastName').val(employee.l_name);
+                    $('#editFirstName').val(employee.f_name);
+                    $('#editMiddleName').val(employee.m_name);
+                    $('#editAge').val(employee.age);
+                    $('#editContactNumber').val(employee.contact_number);
+                    $('#editModal').modal('show');
                 },
                 error: function (error) {
-                    console.error('Error fetching employees:', error);
+                    console.error('Error fetching employee details:', error);
+                    alert('Failed to fetch employee details. Please try again.');
                 }
             });
         });
-    </script>
+
+        // Save changes in the modal
+        $('#editEmployeeForm').on('submit', function (e) {
+            e.preventDefault();
+            const employeeId = $('#editEmployeeId').val();
+            const updatedData = {
+                l_name: $('#editLastName').val(),
+                f_name: $('#editFirstName').val(),
+                m_name: $('#editMiddleName').val(),
+                age: $('#editAge').val(),
+                contact_number: $('#editContactNumber').val()
+            };
+            $.ajax({
+                url: `http://127.0.0.1:8000/api/employees/${employeeId}`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(updatedData),
+                success: function () {
+                    alert('Employee updated successfully!');
+                    $('#editModal').modal('hide');
+                    location.reload(); // Reload the table
+                },
+                error: function (error) {
+                    console.error('Error updating employee:', error);
+                    alert('Failed to update the employee. Please try again.');
+                }
+            });
+        });
+
+        // Delete button click event
+        $(document).on('click', '.delete-btn', function () {
+            const employeeId = $(this).data('id');
+            if (confirm('Are you sure you want to delete this employee?')) {
+                $.ajax({
+                    url: `http://127.0.0.1:8000/api/employees/${employeeId}`,
+                    method: 'DELETE',
+                    success: function () {
+                        alert('Employee deleted successfully!');
+                        location.reload(); // Reload the table
+                    },
+                    error: function (error) {
+                        console.error('Error deleting employee:', error);
+                        alert('Failed to delete the employee. Please try again.');
+                    }
+                });
+            }
+        });
+    });
+</script>
 </body>
 </html>

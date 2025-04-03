@@ -145,7 +145,7 @@
                                 method: 'DELETE',
                                 success: function (response) {
                                     alert('Student deleted successfully!');
-                                    location.reload(); // Reload the page to refresh the table
+                                    location.reload(); 
                                 },
                                 error: function (error) {
                                     console.error('Error deleting student:', error);
