@@ -4,94 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            background-color: #f4f4f4;
-        }
-        .navbar {
-            width: 100%;
-            background-color: #333;
-            color: white;
-            padding: 15px;
-            text-align: right;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .navbar h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-        .sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            height: 100vh;
-            padding-top: 60px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            overflow-y: auto;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        }
-        .sidebar2 {
-            overflow-y: auto;
-            color: #ecf0f1;
-            align-items: center;
-            padding: 15px 20px;
-            text-align: center;
-            font-size: 20px;
-        }
-        .sidebar a {
-            display: flex;
-            align-items: center;
-            color: #ecf0f1;
-            padding: 15px 20px;
-            text-decoration: none;
-            transition: background 0.3s, color 0.3s;
-        }
-        .sidebar a svg {
-            margin-right: 10px;
-        }
-        .sidebar a:hover {
-            background-color: #34495e;
-            color: #ecdbff;
-        }
-        .sidebar a.active {
-            background-color: #1abc9c;
-            color: white;
-        }
-        .content {
-            margin-left: 250px;
-            padding: 20px;
-            padding-top: 80px;
-            width: calc(100% - 250px);
-        }
-        .content h1 {
-            font-size: 28px;
-            color: #333;
-        }
-        .content p {
-            font-size: 16px;
-            color: #666;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+   
 </head>
 <body>
-   <?php include 'navbar.php'; ?>
-    <?php include 'sidebar.php'; ?>
-    <div class="content">
-        <div class="content1">
-            <div class="user-info" id="user-info">
-            </div>
+    <div class="d-flex flex-column" style="width: 100vw;">
+        <div class="" style="300px">
+            <?php include 'sidebar.php'; ?>
         </div>
-        <h1>Welcome to the Dashboard</h1>
-        <p>This is your dashboard content.</p>
+        <div class="" style="100%">
+
+             <div class="content">
+                <div class="container">
+                <?php include 'navbar.php'; ?>
+
+                 <div class="content1">
+                     <div class="user-info" id="user-info">
+                     </div>
+                 </div>
+                 <h1>Welcome to the Dashboard</h1>
+                 <p>This is your dashboard content.</p>
+             </div>
+        </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+
+    
     <script>
         document.getElementById('logout').addEventListener('click', async function(event) {
             event.preventDefault();
@@ -105,7 +44,7 @@
                     credentials: 'include' 
                 });
 
-                const data = await response.json();
+                const data = await response.json();  // magkuha sa response sa json format
 
                 if (response.ok) {
                     window.location.href = "index.php"; 
@@ -119,7 +58,7 @@
         });
 
         // Fetch user info
-        async function fetchUserInfo() {
+        async function fetchUserInfo() { //naghimo og asynchuros funtion para sa fetch
             try {
                 const response = await fetch('http://localhost:8000/api/user', {
                     method: 'GET',
@@ -146,5 +85,6 @@
 
         fetchUserInfo();
     </script>
+
 </body>
 </html>
