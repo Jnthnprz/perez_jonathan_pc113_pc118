@@ -24,23 +24,23 @@ class EmployeeController extends Controller
         return response()->json($employees);
     }
 
-    public function store(Request $request)
-    {
-        $validateData = $request->validate([
-            'f_name' => 'required',
-            'l_name' => 'required',
-            'm_name' => 'required',
-            'age' => 'required|numeric|min:1|max:150',
-            'contact_number' => 'required|string|max:15',
-        ]);
+    // public function store(Request $request)
+    // {
+    //     $validateData = $request->validate([
+    //         'f_name' => 'required',
+    //         'l_name' => 'required',
+    //         'm_name' => 'required',
+    //         'age' => 'required|numeric|min:1|max:150',
+    //         'contact_number' => 'required|string|max:15',
+    //     ]);
 
-        $employee = Employee::create($validateData);
+    //     $employee = Employee::create($validateData);
 
-        return response()->json([
-            'message' => 'Employee created successfully',
-            'employee' => $employee,
-        ], 201);
-    }
+    //     return response()->json([
+    //         'message' => 'Employee created successfully',
+    //         'employee' => $employee,
+    //     ], 201);
+    // }
 
     public function show($id)
     {
@@ -83,5 +83,22 @@ class EmployeeController extends Controller
 
         $employee->delete();
         return response()->json(['message' => 'Employee deleted successfully']);
+    }
+    public function create(Request $request)
+    {
+        $validateData = $request->validate([
+            'f_name' => 'required',
+            'l_name' => 'required',
+            'm_name' => 'required',
+            'age' => 'required|numeric|min:1|max:150',
+            'contact_number' => 'required|string|max:15',
+        ]);
+
+        $employee = Employee::create($validateData);
+
+        return response()->json([
+            'message' => 'Employee created successfully',
+            'employee' => $employee,
+        ], 201);
     }
 }

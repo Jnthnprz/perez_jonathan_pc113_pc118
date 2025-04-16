@@ -7,24 +7,35 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
    
 </head>
+<style>
+    .content1 {
+        margin-left: 190px;
+        margin-top: 20px;
+    }
+    .user-info {
+        font-size: 18px;
+        color: #333;
+    }
+    </style>
 <body>
     <div class="d-flex flex-column" style="width: 100vw;">
         <div class="" style="300px">
             <?php include 'sidebar.php'; ?>
         </div>
+        <?php include 'navbar.php'; ?>
         <div class="" style="100%">
 
-             <div class="content">
+           
                 <div class="container">
-                <?php include 'navbar.php'; ?>
 
                  <div class="content1">
                      <div class="user-info" id="user-info">
-                     </div>
-                 </div>
+                     
+                
                  <h1>Welcome to the Dashboard</h1>
                  <p>This is your dashboard content.</p>
-             </div>
+                 </div>
+                 </div>
         </div>
     </div>
 

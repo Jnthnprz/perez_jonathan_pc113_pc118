@@ -185,6 +185,7 @@
             const data = await response.json();
 
             if (response.ok) {
+                localStorage.setItem('token', response.token);
                 window.location.href = "dashboard.php"; 
             } else {
                 alert(data.message || "Invalid email or password");

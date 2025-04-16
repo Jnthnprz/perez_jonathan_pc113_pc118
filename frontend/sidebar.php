@@ -14,7 +14,7 @@
         .sidebar {
             width: 280px;
             height: 100vh;
-            padding-top: 15px;
+            padding-top: 12px;
             position: fixed;
             top: 0;
             left: 0;
@@ -28,12 +28,14 @@
             padding: 15px 20px;
             text-align: center;
             font-size: 20px;
+
         }
         .sidebar a {
+            margin-top: 15px;
             display: flex;
             align-items: center;
             color:rgb(5, 110, 136);
-            padding: 15px 20px;
+            padding: 5px 20px;
             text-decoration: none;
             transition: background 0.3s, color 0.3s;
         }
@@ -53,13 +55,34 @@
             padding: 20px;
             width: calc(100% - 250px);
         }
-        .content h1 {
-            font-size: 28px;
-            color: #333;
+        .cashier{
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            color:rgb(5, 110, 136);
+            padding: 5px 20px;
+            text-decoration: none;
+            transition: background 0.3s, color 0.3s;
+            border-bottom: 3px solid rgb(5, 110, 136);
         }
-        .content p {
-            font-size: 16px;
-            color: #666;
+        .cashier2{
+            overflow-y: auto;
+            color: #0292B7;
+            align-items: center;
+            padding: 0 0;
+            text-align: center;
+            font-size: 20px;
+            text-decoration: none;
+            transition: background 0.3s, color 0.3s;
+        }
+        .cashier2 a{
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            color:rgb(5, 110, 136);
+            padding: 5px 20px;
+            text-decoration: none;
+            transition: background 0.3s, color 0.3s;
         }
 </style>
 <body>
@@ -87,6 +110,16 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-users"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
             Employees
         </a>
+
+    <div class="cashier">
+    </div>
+    <div class="cashier2">
+         <a href="cashier.php">
+         <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-device-imac"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 4a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-12z" /><path d="M3 13h18" /><path d="M8 21h8" /><path d="M10 17l-.5 4" /><path d="M14 17l.5 4" /></svg>            
+         Cashier
+        </a>
+
+    </div>
     </div>
     </div>
 </body>

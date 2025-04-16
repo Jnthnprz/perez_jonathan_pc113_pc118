@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
 
 // Authentication Routes
@@ -25,8 +26,10 @@ Route::get('/students/{id}', [StudentController::class, 'show']);
 Route::put('/students/{id}', [StudentController::class, 'update']);
 Route::delete('/students/{id}', [StudentController::class, 'destroy']);
 
-
-
+//User Routes
+Route::get('/view', [UserController::class, 'current_user']);
+Route::post('/upload-document', [UserController::class, 'uploadDocument']);
+Route::get('/documents', [UserController::class, 'listDocuments']);
 
 Route::middleware('permission')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

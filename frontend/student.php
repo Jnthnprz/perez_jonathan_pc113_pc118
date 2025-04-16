@@ -49,11 +49,12 @@
             margin-left: 280px;
         }
         .cont1 {
-            margin-top: 70px;
+            margin-top: 20px;
             padding: 20px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
         }
     </style>
 </head>
@@ -61,8 +62,7 @@
   
     <?php include 'sidebar.php'; ?>
     <div class="container">
-        <?php include 'navbar.php'; ?>
-    </div>
+   <?php include 'navbar.php'; ?>
         <div class="cont1">
             <div class="add">
                 <a href="add_student.php" class="btn btn-primary">Add Student</a>
@@ -87,6 +87,7 @@
                 <a href="dashboard.php" class="back-button">Back</a>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Edit Modal -->
