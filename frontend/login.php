@@ -1,3 +1,22 @@
+<?php
+session_start();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['set_session'])) {
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (isset($input['token'], $input['name'], $input['role'], $input['email'])) {
+        $_SESSION['token'] = $input['token'];
+        $_SESSION['name'] = $input['name'];
+        $_SESSION['role'] = $input['role'];
+        $_SESSION['email'] = $input['email'];
+        echo json_encode(['status' => 'success']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Missing data']);
+    }
+    exit;
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +27,7 @@
         body {
             margin: 0;
             padding: 0;
-            background:rgb(120, 146, 248);
+            background: #0292B7;;
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
@@ -168,33 +187,67 @@
     <span class="agreement"><a href="#">Learn user licence agreement</a></span>
 </div>
 <script>
-    document.getElementById("loginForm").addEventListener("submit", async function(event) {
-        event.preventDefault();
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
+document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-        try {
-            const response = await fetch('http://localhost:8000/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            });
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-            const data = await response.json();
+    if (!email || !password) {
+        alert("Please fill in all fields.");
+        return;
+    }
 
-            if (response.ok) {
-                localStorage.setItem('token', response.token);
-                window.location.href = "dashboard.php"; 
-            } else {
-                alert(data.message || "Invalid email or password");
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert("An error occurred. Please try again later.");
+    const requestData = {
+        email,
+        password
+    };
+
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        const data = await response.json();
+
+        console.log(data);
+
+        if (response.ok && data.token) {
+            localStorage.setItem('token', data.token);   // Save token to localStorage
+            sessionStorage.setItem('token', data.token); 
+            sessionStorage.setItem('name', data.user.name); 
+            sessionStorage.setItem('role', data.user.role); 
+            sessionStorage.setItem('email', data.user.email); 
+            window.location.href = 'dashboard.php';      // Redirect to dashboard
+        } else {
+            alert(data.message || 'Login failed.');
         }
-    });
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    }
+});
+fetch('http://localhost:8000/api/login', {
+  method: 'POST',
+  body: JSON.stringify({ email, password }),
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+.then(res => res.json())
+.then(data => {
+  localStorage.setItem('token', data.token); // Save token
+  window.location.href = 'dashboard.html';  // Redirect to dashboard
+});
+
 </script>
+
+
+
 </body>
 </html>

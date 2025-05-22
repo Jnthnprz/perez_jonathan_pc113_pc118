@@ -61,8 +61,7 @@
                 e.preventDefault(); 
 
                 const employeeData = {
-                    l_name: $('#lastName').val(),
-                    f_name: $('#firstName').val(),
+                    name: $('#firstName').val() + " " + $('#lastName').val(), // Combine first and last name
                     m_name: $('#middleName').val(),
                     age: $('#age').val(),
                     contact_number: $('#contactNumber').val()

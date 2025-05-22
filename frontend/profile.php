@@ -1,139 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+    .profile-wrapper {
+      margin: 50px 10px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .profile-box {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 380px;
+      min-height: 200px;
+      margin-left: 40%;
+      margin-top: 20px;
+    }
+    .userinfo, .information {
+      padding: 15px;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      border: 1px solid #ddd;
+    }
+    .userinfo h2 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #343a40;
+    }
+    .information p {
+      margin: 5px 0;
+      font-size: 16px;
+      color: #495057;
+    }
+  </style>
 </head>
-<style>
-    .container {
-        margin-left: 280px;
-        padding: 20px;
-    }
-    .anak {
-        border-radius: 8px;
-        padding: 10px;
-    }
-    .cont1 {
-        margin-top: 70px;
-        padding: 20px;
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    .userinfo {
-        background-color: white;
-        display: flex;
-        padding: 5px;
-        font-size: 40px;
-        border-bottom: 3px solid black;
-    }
-    .information {
-        margin-top: 10px;
-        background-color: white;
-        display: flex;
-        font-size: 20px;
-        border-bottom: 3px solid black;
-    }
-    .fileupload {
-        margin-top: 10px;
-        background-color: white;
-        display: block;
-        font-size: 20px;
-        border-bottom: 3px solid black; 
-    }
-</style>
 <body>
-    <?php include 'sidebar.php'; ?>
-    <div class="container">
-        <div class="d-flex justify-content-end" style="width: 100%; line-height: 30px; padding: 15px;">
-            <div class="dropdown">
-                <button class="btn btn-transparent dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Profile ni
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Settings</a></li>
-                    <li><a class="dropdown-item" href="#">Logout</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="container1">
-            <div class="anak">
-                <div class="userinfo" id="userinfo">
-                    <!-- User's name will be dynamically loaded here -->
-                </div>
-                <div class="information" id="information">
-                    <!-- User's additional information will be dynamically loaded here -->
-                </div>
-                <div class="fileupload">
-                    <form id="uploadForm" enctype="multipart/form-data">
-                        <input type="file" name="document" id="document" class="form-control mb-3" accept=".pdf,.doc,.docx">
-                        <button type="submit" class="btn btn-primary">Upload</button>
-                    </form>
-                    <div id="uploadStatus" class="mt-3"></div>
-                </div>
-            </div>
-        </div>
+  <?php include 'sidebar.php'; ?>
+
+    <div class="profile-box">
+      <h3 class="text-center mb-3">User Profile</h3>
+      <div class="userinfo" id="userinfo">
+        <h2>Loading user information...</h2>
+      </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Fetch user information from the backend
-        fetch('http://127.0.0.1:8000/api/view', {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('userinfo').innerHTML = `Logged in as: ${data.name}`;
-            document.getElementById('information').innerHTML = `
-                <p><strong>Email:</strong> ${data.email}</p>
-                <p><strong>Role:</strong> ${data.role || 'N/A'}</p>
-            `;
-        })
-        .catch(error => {
-            console.error('Error fetching user:', error);
-            alert('An error occurred while fetching user information. Please try again.');
-        });
+   
 
-        // Handle file upload
-        document.getElementById('uploadForm').addEventListener('submit', async function (event) {
-            event.preventDefault();
+  <script>
+    async function fetchUserInfo() {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/view', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
 
-            const formData = new FormData();
-            const fileInput = document.getElementById('document');
-            formData.append('document', fileInput.files[0]);
+    if (!response.ok) {
+      throw new Error('Failed to fetch user information');
+    }
 
-            try {
-                const response = await fetch('http://127.0.0.1:8000/api/upload-document', {
-                    method: 'POST',
-                    body: formData
-                });
+    const data = await response.json();
 
-                const data = await response.json();
+    if (data.firstname && data.lastname && data.email) {
+      document.getElementById('userinfo').innerHTML = `
+        <h2>Welcome, ${data.firstname} ${data.lastname}</h2>
+      `;
+      document.getElementById('information').innerHTML = `
+        <p><strong>First Name:</strong> ${data.firstname}</p>
+        <p><strong>Last Name:</strong> ${data.lastname}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Role:</strong> ${data.role || 'N/A'}</p>
+        <p><strong>Joined:</strong> ${new Date(data.created_at).toLocaleDateString()}</p>
+      `;
+    } else {
+      document.getElementById('userinfo').innerHTML = `<h2 class="text-danger">Failed to load user information.</h2>`;
+    }
+  } catch (error) {
+    console.error('Error fetching user information:', error);
+    document.getElementById('userinfo').innerHTML = `<h2 class="text-danger">An error occurred while fetching user information.</h2>`;
+  }
+}
 
-                if (response.ok) {
-                    const fileUrl = data.file_url || '#';
-                    const fileName = fileInput.files[0].name;
-
-                    document.getElementById('uploadStatus').innerHTML = `
-                        <p class="text-success">File uploaded successfully!</p>
-                        <p><strong>Uploaded File:</strong> 
-                            <a href="${fileUrl}" target="_blank">${fileName}</a>
-                        </p>
-                    `;
-                } else {
-                    document.getElementById('uploadStatus').innerHTML = `<p class="text-danger">Failed to upload file: ${data.message}</p>`;
-                }
-            } catch (error) {
-                console.error('Error uploading file:', error);
-                document.getElementById('uploadStatus').innerHTML = `<p class="text-danger">An error occurred while uploading the file.</p>`;
-            }
-        });
-    </script> 
+// Call the function after page load
+fetchUserInfo();
+  </script>
 </body>
 </html>

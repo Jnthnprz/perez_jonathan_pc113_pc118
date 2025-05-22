@@ -45,9 +45,9 @@
     .back a:hover {
       background: #007b5e;
     }
-    .container {
+    /* .container {
       margin-left: 280px;
-    }
+    } */
     .cont1 {
       margin-top: 20px;
       padding: 20px;
@@ -74,7 +74,7 @@
     </div>
 
     <div class="cont1">
-      <div class="add mb-3">
+      <div class="add mb-1">
         <a href="add_employee.php" class="btn btn-primary">Add Employee</a>
       </div>
       <h1>Employee Data Table</h1>
@@ -85,6 +85,7 @@
             <th>Last Name</th>
             <th>First Name</th>
             <th>Middle Name</th>
+            <th>Email</th>
             <th>Age</th>
             <th>Contact Number</th>
             <th>Action</th>
@@ -122,6 +123,10 @@
               <input type="text" class="form-control" id="editMiddleName">
             </div>
             <div class="form-group">
+              <label for="editMiddleName">Email</label>
+              <input type="text" class="form-control" id="editMiddleName">
+            </div>
+            <div class="form-group">
               <label for="editAge">Age</label>
               <input type="number" class="form-control" id="editAge" required>
             </div>
@@ -154,6 +159,7 @@
                 <td>${employee.l_name}</td>
                 <td>${employee.f_name}</td>
                 <td>${employee.m_name}</td>
+                <td>${employee.email}</td>
                 <td>${employee.age}</td>
                 <td>${employee.contact_number}</td>
                 <td>
@@ -198,6 +204,7 @@
             $('#editLastName').val(employee.l_name);
             $('#editFirstName').val(employee.f_name);
             $('#editMiddleName').val(employee.m_name);
+            $('#editMiddleName').val(employee.email);
             $('#editAge').val(employee.age);
             $('#editContactNumber').val(employee.contact_number);
             const modal = new bootstrap.Modal(document.getElementById('editModal'));
@@ -221,6 +228,7 @@
           l_name: $('#editLastName').val(),
           f_name: $('#editFirstName').val(),
           m_name: $('#editMiddleName').val(),
+          email: $('#editMiddleName').val(),
           age: $('#editAge').val(),
           contact_number: $('#editContactNumber').val()
         };
