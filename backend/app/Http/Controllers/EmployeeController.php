@@ -63,6 +63,7 @@ class EmployeeController extends Controller
             'l_name' => 'required',
             'm_name' => 'required',
             'age' => 'required|numeric|min:1|max:150',
+            'email' => 'required|email|unique:employees,email,' . $employee->id,
             'contact_number' => 'required|string|max:15',
         ]);
 
@@ -90,6 +91,8 @@ class EmployeeController extends Controller
             'f_name' => 'required',
             'l_name' => 'required',
             'm_name' => 'required',
+            'email' => 'required|email|unique:employees,email',
+            'password' => 'required|string|min:8', 
             'age' => 'required|numeric|min:1|max:150',
             'contact_number' => 'required|string|max:15',
         ]);

@@ -30,14 +30,12 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        
-        $token = Str::random(70);
-        
-         $user->update(['api_token' => $token]);
+         $token = $user->createToken("token")->plainTextToken;
 
         return response()->json([
+            'message' => 'Login successful',
             'token' => $token,
-            'user' => $user->only(['id','name','email'])
+            'user' => $user->only(['id','name','email', 'role'])
         ]);
     } 
 
@@ -47,4 +45,3 @@ class AuthController extends Controller
             return response()->json(['message' => 'Successfully logged out']);
         }
     }
-

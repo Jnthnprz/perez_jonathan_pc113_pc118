@@ -15,6 +15,8 @@ class EmployeeFactory extends Factory
             'l_name' => $this->faker->lastName,
             'f_name' => $this->faker->firstName,
             'm_name' => $this->faker->randomLetter,
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => bcrypt('password'),
             'age' => $this->faker->numberBetween(18, 24),
             'contact_number' => $this->faker->phoneNumber,
         ];
