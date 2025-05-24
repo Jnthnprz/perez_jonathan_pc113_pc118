@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SalesController;
 
 
+
 // Authentication Routes
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/users', [AuthController::class, 'index']);
@@ -38,6 +39,9 @@ Route::get('/users/{id}', [UserController::class, 'show']);
 Route::get('/view', [UserController::class, 'current_user']);
 Route::post('/upload-document', [UserController::class, 'uploadDocument']);
 Route::get('/documents', [UserController::class, 'listDocuments']);
+Route::get('/getusers', [UserController::class, 'getUser']);
+Route::get('/users', [UserController::class, 'index']);
+
 
 //products
 Route::get('/products', [ProductController::class, 'index']);

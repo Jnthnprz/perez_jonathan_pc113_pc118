@@ -60,10 +60,10 @@ class ProductController extends Controller
         'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
     ]);
 
-    // Handle image update if a new one is uploaded
+   
     if ($request->hasFile('image')) {
         $path = $request->file('image')->store('products', 'public');
-        $validated['image'] = $path; // ✅ Save only the relative path in DB
+        $validated['image'] = $path; 
     }
 
     // Update product
