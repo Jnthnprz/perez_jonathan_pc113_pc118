@@ -123,7 +123,7 @@ session_start();
             
             // User is an admin
         // ?> -->
-         <a id="userLink" href="user.php"><i class="fas fa-users me-3">
+         <a id="userLink" href="user.php">
                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  
                stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user-square">
                <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 10a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /><path d="M6 21v-1a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v1" />
@@ -145,7 +145,7 @@ session_start();
                 Employees</a>
             </div>
            </div> -->
-           <a href="products.php">
+           <a id = "userproducts" href="products.php">
             <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-producthunt"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 16v-8h2.5a2.5 2.5 0 1 1 0 5h-2.5" /><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /></svg>
             Manage Products
         </a>
@@ -165,12 +165,23 @@ session_start();
     </div>
     </div>
     <script>
-        const link = document.getElementById('userLink');
-       const role = localStorage.getItem('role');
-        if (role == '0') { // assuming 0 = admin
-            document.getElementById('userLink').style.display = 'flex';
-        }
-
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch ('http://127.0.0.1:8000/api/user', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.role != 1) {
+                    document.getElementById('userLink').style.display = 'none';
+                    document.getElementById('userproducts').style.display = 'none';
+                    
+                }
+            })
+        });
     </script>
 </body>
 </html>

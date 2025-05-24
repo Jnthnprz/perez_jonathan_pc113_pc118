@@ -26,9 +26,9 @@
                         <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle active" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Category</a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#" onclick="filterByCategory('')">All Products</a></li>
+                            <li><a class="dropdown-item" href="" onclick="filterByCategory('')">All Products</a></li>
                             <li><hr class="dropdown-divider" /></li>
-                            <li><a class="dropdown-item" href="#" onclick="filterByCategory('Animal Medicine')">Animal Medicine</a></li>
+                            <li><a class="dropdown-item" href="register.php" onclick="filterByCategory('Animal Medicine')">Animal Medicine</a></li>
                             <li><a class="dropdown-item" href="#" onclick="filterByCategory('Pet Toys')">Pet Toys</a></li>
                             <li><a class="dropdown-item" href="#" onclick="filterByCategory('Food & Treats')">Food & Treats</a></li>
                             <li><a class="dropdown-item" href="#" onclick="filterByCategory('Grooming')">Grooming</a></li>
@@ -137,6 +137,7 @@
 
             // Load all products by default when page loads
             window.onload = () => loadProducts('');
+            
         </script>
     </body>
 </html>

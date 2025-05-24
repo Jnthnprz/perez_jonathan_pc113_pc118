@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>User Data Table</title>
+
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" />
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -46,8 +55,17 @@
             background: #007b5e;
         }
         .container {
-            margin-left: 280px;
+            margin-left: 280px; /* Keeps it to the right of the sidebar */
+            padding-right: 20px;
+            width: calc(100% - 280px); /* Occupy all available space */
         }
+
+       .container-fluid-main {
+            margin-left: 280px;
+            width: calc(100% - 280px);
+            padding: 20px;
+        }
+
         .cont1 {
             margin-top: 20px;
             padding: 20px;
@@ -56,18 +74,25 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             width: 100%;
         }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
     </style>
 </head>
 <body>
     <?php include 'sidebar.php'; ?>
-    <div class="container" style="margin-left: 280px;">
+   <div class="container-fluid px-3">
         <?php include 'navbar.php'; ?>
-        <div class="cont1">
-            <div class="add">
-                <a href="add_user.php" class="btn btn-primary">Add User</a>
-            </div>
-            <h1>User Data Table</h1>
-            <table id="userTable" class="table table-striped table-bordered">
+        <div class="container-fluid-main">
+    <div class="cont1">
+        <div class="add mb-3">
+            <a href="add_user.php" class="btn btn-primary">Add User</a>
+        </div>
+        <h1>User Data Table</h1>
+        <div class="table-responsive">
+            <table id="userTable" class="table table-striped table-bordered w-100">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -77,14 +102,14 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                </tbody>
+                <tbody></tbody>
             </table>
-            <div class="back">
-                <a href="dashboard.php" class="back-button">Back</a>
-            </div>
+        </div>
+        <div class="back">
+            <a href="dashboard.php" class="back-button">Back</a>
         </div>
     </div>
+</div>
 
     <!-- Edit Modal -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -96,47 +121,65 @@
                 </div>
                 <div class="modal-body">
                     <form id="editUserForm">
-                        <input type="hidden" id="editUserId">
-                        <div class="form-group">
-                            <label for="editName">Name</label>
-                            <input type="text" class="form-control" id="editName" required>
+                        <input type="hidden" id="editUserId" />
+                        <div class="mb-3">
+                            <label for="editName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="editName" required />
                         </div>
-                        <div class="form-group">
-                            <label for="editEmail">Email</label>
-                            <input type="email" class="form-control" id="editEmail" required>
+                        <div class="mb-3">
+                            <label for="editEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="editEmail" required />
                         </div>
-                        <div class="form-group">
-                            <label for="editRole">Role</label>
-                            <input type="text" class="form-control" id="editRole" required>
+                        <div class="mb-3">
+                            <label for="editRole" class="form-label">Role</label>
+                            <select class="form-select" id="editRole" required>
+                                <option value="1">Admin</option>
+                                <option value="3">Cashier</option>
+                                <option value="2">Customer</option>
+                            </select>
                         </div>
-                        <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+                        <button type="submit" class="btn btn-primary mt-2">Save Changes</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Bootstrap JS Bundle (includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-$(document).ready(function () {
-    $.ajax({
-        url: 'http://127.0.0.1:8000/api/users',
-        method: 'GET',
-        dataType: 'json',
-        success: function (data) {
+    function getRoleName(role) {
+        switch (parseInt(role)) {
+            case 1: return 'Admin';
+            case 3: return 'Cashier';
+            case 2: return 'Customer';
+            default: return 'Unknown';
+        }
+    }
+
+    function loadUsers() {
+        fetch('http://127.0.0.1:8000/api/users', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
             let tableBody = '';
-            data.forEach((user) => {
-                tableBody += ` 
+            data.forEach(user => {
+                tableBody += `
                     <tr>
                         <td>${user.id}</td>
                         <td>${user.name}</td>
                         <td>${user.email}</td>
-                        <td>${user.role}</td>
+                        <td>${getRoleName(user.role)}</td>
                         <td>
                             <button class="edit-btn btn btn-primary btn-sm" data-id="${user.id}">Edit</button>
                             <button class="delete-btn btn btn-danger btn-sm" data-id="${user.id}">Delete</button>
@@ -146,73 +189,96 @@ $(document).ready(function () {
             });
             $('#userTable tbody').html(tableBody);
 
-            $('#userTable').DataTable({
-                responsive: true,
-                paging: true,
-                searching: true,
-                ordering: true,
-                language: {
-                    search: "Search:",
-                    lengthMenu: "Show _MENU_ entries",
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                }
-            });
-
-            // Edit button click
-            $(document).on('click', '.edit-btn', function () {
-                const userId = $(this).data('id');
-                $.ajax({
-                    url: `http://127.0.0.1:8000/api/users/${userId}`,
-                    method: 'GET',
-                    success: function (user) {
-                        $('#editUserId').val(user.id);
-                        $('#editName').val(user.name);
-                        $('#editEmail').val(user.email);
-                        $('#editRole').val(user.role);
-                        $('#editModal').modal('show');
-                    },
-                    error: function (error) {
-                        console.error('Error fetching user details:', error);
-                        Swal.fire('Error', 'Failed to fetch user details.', 'error');
+            if (!$.fn.DataTable.isDataTable('#userTable')) {
+                $('#userTable').DataTable({
+                    responsive: true,
+                    paging: true,
+                    searching: true,
+                    ordering: true,
+                    language: {
+                        search: "Search:",
+                        lengthMenu: "Show _MENU_ entries",
+                        info: "Showing _START_ to _END_ of _TOTAL_ entries",
                     }
                 });
-            });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error);
+            Swal.fire('Error', 'Failed to load users.', 'error');
+        });
+    }
 
-            // Submit edit form
-            $('#editUserForm').on('submit', function (e) {
-                e.preventDefault();
-                const userId = $('#editUserId').val();
-                const updatedData = {
-                    name: $('#editName').val(),
-                    email: $('#editEmail').val(),
-                    role: $('#editRole').val(),
-                };
+    document.addEventListener('DOMContentLoaded', function () {
+        loadUsers();
 
-                $.ajax({
-                    url: `http://127.0.0.1:8000/api/users/${userId}`,
-                    method: 'PUT',
-                    contentType: 'application/json',
-                    data: JSON.stringify(updatedData),
-                    success: function () {
-                        $('#editModal').modal('hide');
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'User updated successfully!',
-                        }).then(() => {
-                            location.reload();
-                        });
-                    },
-                    error: function (error) {
-                        console.error('Error updating user:', error);
-                        Swal.fire('Error', 'Failed to update the user.', 'error');
+        // Edit button
+        document.body.addEventListener('click', function (e) {
+            if (e.target.classList.contains('edit-btn')) {
+                const userId = e.target.getAttribute('data-id');
+
+                fetch(`http://127.0.0.1:8000/api/users/${userId}`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
                     }
-                });
-            });
+                })
+                .then(res => res.json())
+                .then(user => {
+                    document.getElementById('editUserId').value = user.id;
+                    document.getElementById('editName').value = user.name;
+                    document.getElementById('editEmail').value = user.email;
+                    document.getElementById('editRole').value = user.role;
 
-            // Delete user
-            $(document).on('click', '.delete-btn', function () {
-                const userId = $(this).data('id');
+                    const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+                    editModal.show();
+                })
+                .catch(() => {
+                    Swal.fire('Error', 'Failed to fetch user details.', 'error');
+                });
+            }
+        });
+
+        // Submit Edit Form
+        document.getElementById('editUserForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const userId = document.getElementById('editUserId').value;
+            const updatedData = {
+                name: document.getElementById('editName').value,
+                email: document.getElementById('editEmail').value,
+                role: document.getElementById('editRole').value
+            };
+
+            fetch(`http://127.0.0.1:8000/api/users/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify(updatedData)
+            })
+            .then(res => {
+                if (!res.ok) throw new Error();
+                return res.json();
+            })
+            .then(() => {
+                Swal.fire('Success', 'User updated successfully!', 'success').then(() => {
+                    const editModal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+                    editModal.hide();
+                    loadUsers();
+                });
+            })
+            .catch(() => {
+                Swal.fire('Error', 'Failed to update user.', 'error');
+            });
+        });
+
+        // Delete user
+        document.body.addEventListener('click', function (e) {
+            if (e.target.classList.contains('delete-btn')) {
+                const userId = e.target.getAttribute('data-id');
+
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -223,33 +289,30 @@ $(document).ready(function () {
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $.ajax({
-                            url: `http://127.0.0.1:8000/api/users/${userId}`,
+                        fetch(`http://127.0.0.1:8000/api/users/${userId}`, {
                             method: 'DELETE',
-                            success: function () {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Deleted!',
-                                    text: 'User has been deleted.'
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            },
-                            error: function (error) {
-                                console.error('Error deleting user:', error);
-                                Swal.fire('Error', 'Failed to delete the user.', 'error');
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
                             }
+                        })
+                        .then(res => {
+                            if (!res.ok) throw new Error();
+                            return res.json();
+                        })
+                        .then(() => {
+                            Swal.fire('Deleted!', 'User has been deleted.', 'success').then(() => {
+                                loadUsers();
+                            });
+                        })
+                        .catch(() => {
+                            Swal.fire('Error', 'Failed to delete the user.', 'error');
                         });
                     }
                 });
-            });
-        },
-        error: function (error) {
-            console.error('Error fetching users:', error);
-            Swal.fire('Error', 'Failed to load users.', 'error');
-        }
+            }
+        });
     });
-});
 </script>
+
 </body>
 </html>

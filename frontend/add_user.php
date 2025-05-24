@@ -49,8 +49,8 @@
       <div class="form-group">
         <label for="addRole">Role</label>
         <select class="form-control" id="addRole" required>
-          <option value="0">Admin</option>
-          <option value="1">Cashier</option>
+          <option value="1">Admin</option>
+          <option value="3">Cashier</option>
           <option value="2">Customer</option>
         </select>
       </div>
@@ -66,58 +66,40 @@
   <!-- SweetAlert2 JS -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const addUserForm = document.getElementById('addUserForm');
+  <!-- KEEP YOUR ORIGINAL STYLES & HTML STRUCTURE -->
 
-      addUserForm.addEventListener('submit', function (e) {
-        e.preventDefault();
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  document.getElementById('addUserForm').addEventListener('submit', function (e) {
+    e.preventDefault();
 
-        const newUser = {
-          name: document.getElementById('addName').value,
-          email: document.getElementById('addEmail').value,
-          role: document.getElementById('addRole').value,
-          password: document.getElementById('addPassword').value,
-        };
+    const newUser = {
+      name: document.getElementById('addName').value,
+      email: document.getElementById('addEmail').value,
+      password: document.getElementById('addPassword').value,
+      role: document.getElementById('addRole').value,
+    };
 
-        fetch('http://127.0.0.1:8000/api/users', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newUser)
-        })
-        .then(async (response) => {
-          if (!response.ok) {
-            const errorData = await response.json();
-            console.error('Server responded with error:', errorData);
-            throw new Error('Server Error');
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log('Success:', data);
-          Swal.fire({
-            icon: 'success',
-            title: 'User Added!',
-            text: 'The new user has been added successfully.',
-            confirmButtonColor: '#007bff'
-          }).then(() => {
-            window.location.href = 'user.php';
-          });
-        })
-        .catch((error) => {
-          console.error('Error adding user:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Failed to add the user. Please try again.',
-            confirmButtonColor: '#dc3545'
-          });
-        });
-      });
+    fetch('http://127.0.0.1:8000/api/users', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newUser)
+    })
+    .then(response => response.json().then(data => {
+      if (!response.ok) throw data;
+      Swal.fire('Success!', 'User added successfully.', 'success')
+           .then(() => window.location.href = 'user.php');
+    }))
+    .catch(error => {
+      console.error('Add error:', error);
+      Swal.fire('Error!', error.message || 'Failed to add user.', 'error');
     });
-  </script>
+  });
+});
+</script>
+
 </body>
 </html>

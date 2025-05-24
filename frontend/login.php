@@ -161,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['set_session'])) {
     <form id="loginForm" action="javascript:void(0);" class="form">
         <input required="" class="input" type="email" name="email" id="email" placeholder="E-mail">
         <input required="" class="input" type="password" name="password" id="password" placeholder="Password">
-        <span class="forgot-password"><a href="#">Forgot Password ?</a></span>
+        <span class="forgot-password"><a href="forgot_password.php">Forgot Password ?</a></span>
         <input class="login-button" type="submit" value="Log In">
     </form>
     <div class="social-account-container">
@@ -217,13 +217,18 @@ document.getElementById('loginForm').addEventListener('submit', async function (
 
         console.log(data);
 
-        if (response.ok && data.token) {
+        if (data.token) {
             localStorage.setItem('token', data.token);   // Save token to localStorage
             sessionStorage.setItem('token', data.token); 
             sessionStorage.setItem('name', data.user.name); 
             sessionStorage.setItem('role', data.user.role); 
             sessionStorage.setItem('email', data.user.email); 
-            window.location.href = 'dashboard.php';      // Redirect to dashboard
+            if (data.user.role === 2) {
+               window.location.href = 'index.php'; // Set admin flag
+            } else {
+                window.location.href = 'dashboard.php';
+                
+            }
         } else {
             alert(data.message || 'Login failed.');
         }
@@ -232,18 +237,18 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         alert('An error occurred. Please try again.');
     }
 });
-fetch('http://localhost:8000/api/login', {
-  method: 'POST',
-  body: JSON.stringify({ email, password }),
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})
-.then(res => res.json())
-.then(data => {
-  localStorage.setItem('token', data.token); // Save token
-  window.location.href = 'dashboard.html';  // Redirect to dashboard
-});
+// fetch('http://localhost:8000/api/login', {
+//   method: 'POST',
+//   body: JSON.stringify({ email, password }),
+//   headers: {
+//     'Content-Type': 'application/json'
+//   }
+// })
+// .then(res => res.json())
+// .then(data => {
+//   localStorage.setItem('token', data.token); // Save token
+//   window.location.href = 'dashboard.html';  // Redirect to dashboard
+// });
 
 </script>
 

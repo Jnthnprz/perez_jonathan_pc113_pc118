@@ -6,6 +6,8 @@
     <title>Our Products</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropify/0.2.2/css/dropify.min.css" />
+    <link rel="stylesheet" href="http://127.0.0.1:8000/dist/css/dropify.css">
+    <link rel="stylesheet" href="http://127.0.0.1:8000/dist/css/dropify.min.css">
 
     <style>
         body {
@@ -59,7 +61,7 @@
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color:rgb(5, 110, 136);">
-        <a class="navbar-brand" href="dashboard.php">My Store</a>
+        <a class="navbar-brand" href="dashboard.php"><img src="images/logo.png" alt="" style="width: 100px; height:80px; margin:0px;"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -109,7 +111,7 @@
                             <option value="Grooming Supplies">Grooming Supplies</option>
                             <option value="Habitat Essentials">Habitat Essentials</option>
                         </select>
-                        <input type="file" name="image" id="image" class="form-control-file">
+                        <input type="file" name="image" id="image" class="form-control dropify" data-allowed-file-extensions="jpg png jpeg webp">
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Save</button>
@@ -124,172 +126,171 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropify/0.2.2/js/dropify.min.js"></script>
-    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="http://127.0.0.1:8000/dist/js/dropify.js"></script>
+    <script src="http://127.0.0.1:8000/dist/js/dropify.min.js"></script>
 
-    <script>
-       const apiUrl = 'http://127.0.0.1:8000/api/products';
 
-$(document).ready(function () {
-    loadProducts();
+   <script>
+    const apiUrl = 'http://127.0.0.1:8000/api/products';
 
-    $('#productForm').on('submit', function (e) {
-        e.preventDefault();
-        let formData = new FormData(this);
-        let id = $('#productId').val();
-        let url = id ? `${apiUrl}/${id}` : apiUrl;
+    $(document).ready(function () {
+        loadProducts();
 
-        if (id) {
-            formData.append('_method', 'PUT'); // Laravel method spoofing
-        }
+        // Initialize Dropify globally
+        $('.dropify').dropify();
 
-        $.ajax({
-            url: url,
-            method: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function () {
-                $('#productModal').modal('hide');
-                loadProducts();
-                resetForm();
-                Swal.fire(
-                    'Saved!',
-                    'Product has been saved successfully.',
-                    'success'
-                );
-            },
-            error: function (err) {
-                console.error(err.responseJSON);
-                Swal.fire(
-                    'Error',
-                    'Failed to save product.',
-                    'error'
-                );
+        $('#productForm').on('submit', function (e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            let id = $('#productId').val();
+            let url = id ? `${apiUrl}/${id}` : apiUrl;
+
+            if (id) {
+                formData.append('_method', 'PUT');
             }
-        });
-    });
 
-    // Load products on category change
-    $('#categoryFilter').on('change', loadProducts);
-});
-
-function loadProducts() {
-    const selectedCategory = $('#categoryFilter').val();
-
-    $.ajax({
-        url: apiUrl,
-        method: 'GET',
-        success: function (data) {
-            const productList = $('#productList');
-            productList.empty();
-
-            const filtered = selectedCategory ? data.filter(p => p.category === selectedCategory) : data;
-
-            filtered.forEach(product => {
-                const productCard = `
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card product-card">
-                            <img src="http://127.0.0.1:8000/storage/${product.image}" class="card-img-top" alt="${product.name}">
-                            <div class="card-body">
-                                <h5 class="card-title">${product.name}</h5>
-                                <p class="card-text">${product.description}</p>
-                                <p class="card-text price-tag">₱${parseFloat(product.price).toFixed(2)}</p>
-                                <p class="card-text"><small class="text-muted">${product.category}</small></p>
-                                <p class="card-text"><small class="text-muted">Stock: ${product.quantity}</small></p>
-                                <button class="btn btn-sm btn-info" onclick="editProduct(${product.id})">Edit</button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">Delete</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                productList.append(productCard);
-            });
-        },
-        error: function () {
-            $('#productList').html(`<div class="col-12 text-center text-danger"><p>Failed to load products.</p></div>`);
-        }
-    });
-}
-
-function resetForm() {
-    $('#productForm')[0].reset();
-    $('#productId').val('');
-    $('#imagePreview').remove(); // Remove old image preview if exists
-}
-
-function editProduct(id) {
-    $.get(`${apiUrl}/${id}`, function (product) {
-        $('#productId').val(product.id);
-        $('#name').val(product.name);
-        $('#description').val(product.description);
-        $('#price').val(product.price);
-        $('#quantity').val(product.quantity);
-        $('#category').val(product.category);
-        $('#productModal').modal('show');
-
-        // Show preview of existing image
-        if (product.image) {
-            if (!$('#imagePreview').length) {
-                $('#image').after(`<img id="imagePreview" src="http://127.0.0.1:8000/storage/${product.image}" alt="Preview" style="margin-top:10px;width:100px;height:auto;">`);
-            } else {
-                $('#imagePreview').attr('src', `http://127.0.0.1:8000/storage/${product.image}`);
-            }
-        }
-    });
-}
-
-function deleteProduct(id) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
             $.ajax({
-                url: `${apiUrl}/${id}`,
+                url: url,
                 method: 'POST',
-                data: { _method: 'DELETE' },
+                data: formData,
+                contentType: false,
+                processData: false,
                 success: function () {
-                    Swal.fire(
-                        'Deleted!',
-                        'The product has been deleted.',
-                        'success'
-                    );
+                    $('#productModal').modal('hide');
                     loadProducts();
+                    resetForm();
+                    Swal.fire('Saved!', 'Product has been saved successfully.', 'success');
                 },
-                error: function () {
-                    Swal.fire(
-                        'Failed!',
-                        'There was an error deleting the product.',
-                        'error'
-                    );
+                error: function (err) {
+                    console.error(err.responseJSON);
+                    Swal.fire('Error', 'Failed to save product.', 'error');
                 }
             });
-        }
+        });
+
+        $('#categoryFilter').on('change', loadProducts);
     });
-}
 
-function confirmCancel() {
-    Swal.fire({
-        title: 'Discard changes?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $('#productModal').modal('hide');
-            resetForm();
+    function loadProducts() {
+        const selectedCategory = $('#categoryFilter').val();
+
+        $.ajax({
+            url: apiUrl,
+            method: 'GET',
+            success: function (data) {
+                const productList = $('#productList');
+                productList.empty();
+
+                const filtered = selectedCategory ? data.filter(p => p.category === selectedCategory) : data;
+
+                filtered.forEach(product => {
+                    const productCard = `
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card product-card">
+                                <img src="http://127.0.0.1:8000/storage/${product.image}" class="card-img-top" alt="${product.name}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${product.name}</h5>
+                                    <p class="card-text">${product.description}</p>
+                                    <p class="card-text price-tag">₱${parseFloat(product.price).toFixed(2)}</p>
+                                    <p class="card-text"><small class="text-muted">${product.category}</small></p>
+                                    <p class="card-text"><small class="text-muted">Stock: ${product.quantity}</small></p>
+                                    <button class="btn btn-sm btn-info" onclick="editProduct(${product.id})">Edit</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    productList.append(productCard);
+                });
+            },
+            error: function () {
+                $('#productList').html(`<div class="col-12 text-center text-danger"><p>Failed to load products.</p></div>`);
+            }
+        });
+    }
+
+    function resetForm() {
+        $('#productForm')[0].reset();
+        $('#productId').val('');
+
+        // Reset Dropify
+        const drEvent = $('#image').data('dropify');
+        if (drEvent) {
+            drEvent.resetPreview();
+            drEvent.clearElement();
         }
-    });
-}
+    }
 
+    function editProduct(id) {
+        $.get(`${apiUrl}/${id}`, function (product) {
+            $('#productId').val(product.id);
+            $('#name').val(product.name);
+            $('#description').val(product.description);
+            $('#price').val(product.price);
+            $('#quantity').val(product.quantity);
+            $('#category').val(product.category);
 
-    </script>
+            // Update Dropify with existing image
+            let imageInput = $('#image');
+            imageInput.attr('data-default-file', `http://127.0.0.1:8000/storage/${product.image}`);
+
+            // Destroy and reinit Dropify
+            let drEvent = imageInput.data('dropify');
+            if (drEvent) {
+                drEvent.destroy();
+            }
+
+            // Reinit with default file
+            imageInput.dropify({
+                defaultFile: `http://127.0.0.1:8000/storage/${product.image}`
+            });
+
+            $('#productModal').modal('show');
+        });
+    }
+
+    function deleteProduct(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `${apiUrl}/${id}`,
+                    method: 'POST',
+                    data: { _method: 'DELETE' },
+                    success: function () {
+                        Swal.fire('Deleted!', 'The product has been deleted.', 'success');
+                        loadProducts();
+                    },
+                    error: function () {
+                        Swal.fire('Failed!', 'There was an error deleting the product.', 'error');
+                    }
+                });
+            }
+        });
+    }
+
+    function confirmCancel() {
+        Swal.fire({
+            title: 'Discard changes?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#productModal').modal('hide');
+                resetForm();
+            }
+        });
+    }
+</script>
 </body>
 </html>

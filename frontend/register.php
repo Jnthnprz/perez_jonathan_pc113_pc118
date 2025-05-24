@@ -243,7 +243,7 @@ document.getElementById("registerForm").addEventListener("submit", async functio
 
         if (loginResponse.ok) {
             localStorage.setItem('token', loginData.token);
-            window.location.href = "dashboard.php";
+            window.location.href = "login.php";
         } else {
             alert(loginData.message || "Login failed after registration");
         }
